@@ -1,6 +1,7 @@
 import { Client, Message } from "discord.js";
 
-import prisma, { getSettings } from "~/functions/database";
+import prisma, { getCountingData } from "~/functions/database";
+import { countingData } from "~/interfaces/database";
 
 const messages = [
   "YOU IDIOT! YOU RUINED THE COUNT! THE NUMBER WAS {NUMBER}!",
@@ -19,14 +20,13 @@ export default async (client: Client, message: Message) => {
 
   if (Number.isNaN(number)) return;
 
-  const { counting } = await getSettings(message.guild!.id);
+  const counting = await getCountingData(message.guild!.id) as countingData;
 
   if (counting.channel != message.channel.id) return;
-
-  if((counting.count += 1) != number) {
+  if ((counting.count += 1) != number) {
     message.react("❌");
     const msg = messages[Math.floor(Math.random() * messages.length)].replace("{NUMBER}", counting.count.toString()).replace("{MAX}", counting.maxcount.toString())
-    message.reply({content: msg})
+    message.reply({ content: msg })
     counting.count = 0;
     await prisma.settings.update({
       where: {
@@ -40,7 +40,7 @@ export default async (client: Client, message: Message) => {
   }
 
   counting.count = number;
-  if(number > counting.maxcount) counting.maxcount = number;
+  if (number > counting.maxcount) counting.maxcount = number;
   await prisma.settings.update({
     where: {
       guildId: message.guild!.id

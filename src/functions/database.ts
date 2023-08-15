@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import { User } from "discord.js";
 import { countingData, joinleaveMessage, joinleaveImage, memberCount, ticketdata } from "~/interfaces/database";
 
@@ -13,7 +13,7 @@ export async function getSettings(guildId: string) {
         create: {
             guildId: guildId,
         },
-        update: {},
+        update: {}
     });
 
     const joinmessage = JSON.parse(settings.joinmessage || '{}') as joinleaveMessage;
@@ -30,6 +30,25 @@ export async function getSettings(guildId: string) {
     const ticketId = settings.ticketId
 
     return { joinmessage, joinimage, leavemessage, leaveimage, ticketdata, membercount, wishlistchannel, counting, ticketId };
+}
+
+export async function getCountingData(guildId: string) {
+    const settings = await prisma.settings.findUnique({
+        where: {
+            guildId: guildId,
+        },
+        select: {
+            counting: true,
+        }
+    });
+
+    if (!settings) return null;
+
+    let counting = JSON.parse(settings.counting || '{}');
+    counting.count = parseInt(counting.count) || 0;
+    counting.maxcount = parseInt(counting.maxcount) || 0;
+    counting = counting as countingData;
+    return counting;
 }
 
 export async function addLicenseKey(
