@@ -8,6 +8,15 @@ export const leaderboard: Command = {
     guildOnly: true,
     execute: async function (interaction, args) {
         const rows = await getTopUsers(interaction.guild!.id, 10, 1);
+
+        rows.sort((a, b) => {
+            if (a.level !== b.level) {
+                return b.level - a.level;
+            } else {
+                return b.xp - a.xp;
+            }
+        });
+
         const fields = [];
 
         const embed = new EmbedBuilder()

@@ -158,7 +158,7 @@ export async function getTopUsers(guildId: string, amount: number, page: number)
             guildId: guildId,
         },
         orderBy: {
-            xp: "desc",
+            level: "desc",
         },
         skip: (page - 1) * amount,
         take: amount,
