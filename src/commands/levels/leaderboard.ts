@@ -25,7 +25,7 @@ export const leaderboard: Command = {
 
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
-            const user = await interaction.guild!.members.fetch(row.userId);
+            const user = await interaction.client.users.fetch(row.userId);
             fields.push({
                 name: `${i + 1}. ${user.displayName}`,
                 value: `Level ${row.level} (${row.xp} xp)`,
