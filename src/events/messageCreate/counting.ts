@@ -3,6 +3,8 @@ import { Client, Message } from "discord.js";
 import prisma, { getCountingData } from "~/functions/database";
 import { countingData } from "~/interfaces/database";
 
+import { evaluate } from "mathjs";
+
 const messages = [
   "YOU IDIOT! YOU RUINED THE COUNT! THE NUMBER WAS {NUMBER}!",
   "You ruined the count! The number was {NUMBER}!",
@@ -16,12 +18,14 @@ export default async (client: Client, message: Message) => {
 
   if (message.author.bot) return;
 
-  const number = parseInt(message.content.split(" ")[0])
+  let number = parseInt(message.content.split(" ")[0])
 
   if (Number.isNaN(number)) return;
 
   const counting = await getCountingData(message.guild!.id) as countingData;
 
+  number = evaluate(message.content);
+  
   if (counting.channel != message.channel.id) return;
   if ((counting.count += 1) != number) {
     message.react("❌");
