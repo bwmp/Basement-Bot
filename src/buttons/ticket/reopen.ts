@@ -135,16 +135,28 @@ export const reopen: Button = {
 
     users.push(ticketInfo.userId);
 
-    const permissionOverwrites = users.map((user: string) => ({
+    const everyonePermissions = {
+      id: interaction.guild?.roles.everyone,
+      deny: [
+          PermissionsBitField.Flags.ViewChannel,
+          PermissionsBitField.Flags.SendMessages,
+          PermissionsBitField.Flags.ReadMessageHistory,
+      ],
+  };
+  
+  const userPermissions = users.map((user: string) => ({
       id: user,
       allow: [
-        PermissionsBitField.Flags.ViewChannel,
-        PermissionsBitField.Flags.SendMessages,
-        PermissionsBitField.Flags.ReadMessageHistory
-      ]
-    }));
-
-    await channel.permissionOverwrites.set(permissionOverwrites);
+          PermissionsBitField.Flags.ViewChannel,
+          PermissionsBitField.Flags.SendMessages,
+          PermissionsBitField.Flags.ReadMessageHistory,
+      ],
+  }));
+  
+  // Combine everyonePermissions with userPermissions
+  const permissionOverwrites = [everyonePermissions, ...userPermissions];
+  
+  await channel.permissionOverwrites.set(permissionOverwrites);
 
     await LogChannel?.send({
       embeds: [logEmbed]

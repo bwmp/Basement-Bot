@@ -34,9 +34,9 @@ model licenses {
 
 model settings {
   guildId         String @unique(map: "guildId")
-  leavemessage    String @default("{\"message\":\"\",\"channel\":\"false\"}")
+  leavemessage    String @default("{\"message\":\"\",\"channel\":\"false\"}") @db.LongText
   leaveimage      String @default("{\"backgroundColor\":\"#0d0d0d\",\"image\":\"\",\"textColor\":\"#f0ccfb\",\"shadow\":\"true\",\"shadowColor\":\"#7c4b8b\"}") @db.LongText
-  joinmessage     String @default("{\"message\":\"\",\"channel\":\"false\"}")
+  joinmessage     String @default("{\"message\":\"\",\"channel\":\"false\"}") @db.LongText
   joinimage       String @default("{\"backgroundColor\":\"#0d0d0d\",\"image\":\"\",\"textColor\":\"#f0ccfb\",\"shadow\":\"true\",\"shadowColor\":\"#7c4b8b\"}") @db.LongText
   ticketdata      String @default("{\"logChannel\": \"false\",\"categories\": {\"open\": \"false\",\"closed\": \"false\"},\"supportRole\": \"false\",\"message\": \"false\",\"transcripts\": \"false\"}") @db.LongText
   membercount     String @default("{\"channel\": \"false\",\"text\": \"Members: {COUNT}\"}")
